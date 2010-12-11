@@ -166,7 +166,7 @@ static NSString *gapVersion;
 	CGRect screenBounds = [ [ UIScreen mainScreen ] bounds ];
 	self.window = [ [ [ UIWindow alloc ] initWithFrame:screenBounds ] autorelease ];
 	
-	webView = [ [ UIWebView alloc ] initWithFrame:screenBounds ];
+	webView = [ [ UIWebView alloc ] initWithFrame:screenBounds ]; // this is imprecise, I'd love to fix it @@TODO
     [webView setAutoresizingMask: (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight) ];
 	
 	viewController.webView = webView;
@@ -238,36 +238,30 @@ static NSString *gapVersion;
 	/*
 	 * imageView - is the Default loading screen, it stay up until the app and UIWebView (WebKit) has completly loaded.
 	 * You can change this image by swapping out the Default.png file within the resource folder.
+	 *
+	 * By default this sucks on iPad. I've changed some code to improve it - nh
 	 */
-	UIImage* image = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Default" ofType:@"png"]];
+	
+	UIImage* image;
+	int v = UI_USER_INTERFACE_IDIOM();
+	
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+	{
+		image = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Default-Portrait" ofType:@"png"]];
+		//image = [UIImage imageNamed:@"Default-Portrait.png"];
+	} else {
+		image = [UIImage imageNamed:@"Default.png"];
+	}
+	
 	imageView = [[UIImageView alloc] initWithImage:image];
-	[image release];
 	
     imageView.tag = 1;
 	[window addSubview:imageView];
 	[imageView release];
-
-	/*
-	 * The Activity View is the top spinning throbber in the status/battery bar. We init it with the default Grey Style.
-	 *
-	 *	 whiteLarge = UIActivityIndicatorViewStyleWhiteLarge
-	 *	 white      = UIActivityIndicatorViewStyleWhite
-	 *	 gray       = UIActivityIndicatorViewStyleGray
-	 *
-	 */
-    UIActivityIndicatorViewStyle topActivityIndicatorStyle = UIActivityIndicatorViewStyleGray;
-    if ([topActivityIndicator isEqualToString:@"whiteLarge"]) {
-        topActivityIndicatorStyle = UIActivityIndicatorViewStyleWhiteLarge;
-    } else if ([topActivityIndicator isEqualToString:@"white"]) {
-        topActivityIndicatorStyle = UIActivityIndicatorViewStyleWhite;
-    } else if ([topActivityIndicator isEqualToString:@"gray"]) {
-        topActivityIndicatorStyle = UIActivityIndicatorViewStyleGray;
-    }
-    activityView = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:topActivityIndicatorStyle] retain];
-    activityView.tag = 2;
-    [window addSubview:activityView];
-    [activityView startAnimating];
-
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+	{
+		[image release];
+	}
 	[window makeKeyAndVisible];
 	
 	return YES;

@@ -18,6 +18,7 @@
     if (self = [super init]) {
 		// do other init here
 	}
+	didDrawStartupImage = NO;
 	
 	return self;
 }
@@ -58,6 +59,40 @@
 			i = -90;
 			break;
 	}
+	
+	if (!didDrawStartupImage)
+	{
+		UIInterfaceOrientation orientation = toInterfaceOrientation; //[[UIApplication sharedApplication] statusBarOrientation];
+		
+		UIImage* image;
+		UIImageView* imageView = (UIImageView*) [self.view.window viewWithTag:1];
+		
+		if (orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown)
+		{
+			imageView.transform = CGAffineTransformMakeRotation(180 * 0.0174532925);
+		} else {
+			image = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Default-Landscape" ofType:@"png"]];
+			imageView.image = image;
+			[imageView sizeToFit];
+			[image release];
+			
+			CGAffineTransform transform;
+			if (orientation == UIInterfaceOrientationLandscapeLeft) {
+				transform = CGAffineTransformMakeRotation(-90 * 0.0174532925);
+				transform = CGAffineTransformTranslate(transform, -128, -128);
+			} else {
+				transform = CGAffineTransformMakeRotation(90 * 0.0174532925);
+				transform = CGAffineTransformTranslate(transform, 128, 128);
+			}
+			imageView.transform = transform;
+		}
+		
+		//[imageView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
+		//[self.view.window addSubview:imageView];
+		//[imageView release];
+	}
+	didDrawStartupImage = YES;
+	
 	[webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"navigator.orientation.setOrientation(%f);", i]];
 }
 

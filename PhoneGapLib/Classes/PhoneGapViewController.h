@@ -12,6 +12,7 @@
 @interface PhoneGapViewController : UIViewController {
     IBOutlet UIWebView *webView;
 	NSArray* supportedOrientations;
+	bool didDrawStartupImage;
 }
 
 @property (nonatomic, retain) 	NSArray* supportedOrientations;
