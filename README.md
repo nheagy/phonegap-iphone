@@ -2,6 +2,10 @@ PhoneGap iPhone
 =============================================================
 PhoneGapLib is a static library that enables users to include PhoneGap in their iPhone application projects easily, and also create new PhoneGap based iPhone application projects through a Xcode project template.
 
+nheagy's fork
+-------------------------------------------------------------
+I've released two PhoneGap apps now, and there are a few thing that I've changed in my own local copy. For instance, I made some changes to the way launch images are shown on iPad. It just seems logical for me to maintain my own copy on github so that other interested people might have access to them.
+
 Pre-requisites
 -------------------------------------------------------------
 Make sure you have installed the latest iPhone SDK. Download at [http://developer.apple.com/iphone](http://developer.apple.com/iphone)
